@@ -1,9 +1,3 @@
----
-title: "Case Study 06"
-author: Your Name
-date: August 1, 2020
-output: github_document
----
 library(raster)
 library(sp)
 library(spData)
@@ -30,26 +24,9 @@ Country_max <- raster::extract(tmean, world2,fun=max,na.rm=T,small=T,sp=T)
 
 Country_max_sf <- st_as_sf(Country_max)
 
-#original plot
 ggplot()+geom_sf(data=Country_max_sf,aes(fill =Country_max$CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology))+
   scale_fill_viridis_c(name="Annual\nMaximum\nTemperature (C)")+theme(legend.position = 'bottom')
 
-#Table organization
-table <- Country_max_sf%>%
-  group_by(continent)%>%
-  arrange(desc(CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology))
-
-table2= table%>%
-  top_n(1,CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology)
-  
-table_final= table2%>%
-  st_set_geometry(NULL)%>%
-  select('name_long','continent','CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology')
-
-#final prducts
-view(table_final)
-ggsave('highest_temp_CRU.png',last_plot())
-
-
-
+chart <- Country_max_sf%>%
+  group_by(continent)
 
